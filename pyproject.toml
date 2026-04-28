@@ -1,0 +1,29 @@
+[build-system]
+requires = ["setuptools>=45", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ai-trading-bot"
+version = "0.1.0"
+description = "AI trading bot with MA crossover strategy and paper trading"
+authors = [{name = "Trading Bot Team"}]
+requires-python = ">=3.8"
+dependencies = [
+    "numpy>=1.24",
+    "pandas>=2.0",
+    "scikit-learn>=1.3",
+    "yfinance>=0.2.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0",
+    "black>=23.0",
+    "ruff>=0.0.1",
+]
+
+[tool.setuptools]
+packages = ["bot"]
+
+[tool.setuptools.package-data]
+bot = ["py.typed"]
