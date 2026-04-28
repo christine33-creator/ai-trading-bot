@@ -8,9 +8,11 @@ A comprehensive AI trading bot project featuring machine learning agents, moving
 - `bot/strategies.py` — trading strategy interfaces and MA crossover implementation
 - `bot/paper_trading.py` — paper trading account with position tracking and P&L calculation
 - `bot/vectorbt_backtester.py` — high-performance backtesting with vectorbt library
+- `bot/ml_models.py` — machine learning models using technical indicators
 - `examples/run_bot.py` — ML agent training and backtesting workflow
 - `examples/ma_crossover_backtest.py` — MA crossover strategy with paper trading
 - `examples/vectorbt_examples.py` — vectorbt backtesting demonstrations
+- `examples/ml_trading_models.py` — logistic regression and random forest examples
 - `requirements.txt` — Python dependencies
 
 ## Features
@@ -23,6 +25,12 @@ A comprehensive AI trading bot project featuring machine learning agents, moving
   - Custom signal backtesting
   - Strategy comparison
   - Parameter optimization via grid search
+- **Machine Learning Models**: Technical indicator-based ML trading
+  - Logistic Regression classifier
+  - Random Forest classifier
+  - Technical indicators: RSI, MACD, Bollinger Bands, ATR, Stochastic, ADX
+  - Feature engineering with 30+ technical indicators
+  - Model evaluation and feature importance
 - **Performance Metrics**: Sharpe ratio, Sortino ratio, max drawdown, win rate, P&L tracking
 - **Market Data**: Real market data via `yfinance` with synthetic fallback
 - **ML Agent**: Scikit-learn based agent for predictive trading
@@ -46,36 +54,50 @@ A comprehensive AI trading bot project featuring machine learning agents, moving
    python .\examples\vectorbt_examples.py
    ```
 
-4. Run ML agent example:
+4. Run ML trading model examples:
+   ```powershell
+   python .\examples\ml_trading_models.py
+   ```
+
+5. Run ML agent example:
    ```powershell
    python .\examples\run_bot.py
    ```
 
-## Vectorbt Backtesting
+## Machine Learning Models
 
-Vectorbt enables high-performance backtesting with vectorized operations:
+Train technical indicator-based models for trading signals:
 
 ```python
-from bot import VectorbtBacktester, MarketDataLoader
+from bot import MLTradingModel, MarketDataLoader
 
 # Load data
-prices = MarketDataLoader.load(symbol="SPY")["Close"]
+market_data = MarketDataLoader.load(symbol="SPY")
 
-# Create backtester
-backtester = VectorbtBacktester(initial_cash=10000, fees=0.001)
+# Create and train logistic regression model
+model = MLTradingModel(model_type="logistic")
+X_train, X_test, y_train, y_test = model.prepare_data(market_data, forward_periods=5)
+model.train(X_train, y_train)
 
-# Backtest strategy
-results = backtester.backtest_ma_crossover(prices, fast_period=10, slow_period=20)
+# Evaluate
+metrics = model.evaluate(X_test, y_test)
+print(f"Accuracy: {metrics['accuracy']:.4f}")
 
-# Optimize parameters
-optimization = backtester.optimize_ma_crossover(prices)
+# Get feature importance
+importance = model.get_feature_importance()
+print(importance.head(10))
 
-# Compare strategies
-comparison = backtester.compare_strategies(prices, {
-    'ma_10_20': {'type': 'ma', 'fast': 10, 'slow': 20},
-    'rsi_14': {'type': 'rsi', 'period': 14},
-})
+# Predict signals (-1: SELL, 0: HOLD, 1: BUY)
+predictions = model.predict(X_test)
 ```
+
+### Technical Indicators
+
+30+ automatically calculated indicators:
+- **Momentum**: RSI, MACD, Stochastic, ADX
+- **Trend**: Moving averages (SMA, EMA), ADX
+- **Volatility**: Bollinger Bands, ATR, Volatility ratios
+- **Volume**: Volume-weighted indicators
 
 ## Configuration
 
