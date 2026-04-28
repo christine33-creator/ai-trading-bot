@@ -9,5 +9,6 @@ setup(
         "pandas>=2.0",
         "scikit-learn>=1.3",
         "yfinance>=0.2.0",
+        "vectorbt>=0.25.0",
     ],
 )
